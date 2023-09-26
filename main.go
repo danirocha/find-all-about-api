@@ -3,22 +3,29 @@ package main
 import (
 	"fmt"
 	"io"
+	"log"
 	"net/http"
 	"os"
 )
 
-func GetHello(w http.ResponseWriter, r *http.Request) {
-	s := "Welcome to POI api!"
+func FindAllAbout(w http.ResponseWriter, r *http.Request) {
+	if err := r.ParseForm(); err != nil {
+		log.Fatalf("An error occurred: %v", err)
+		return
+	}
 
-	io.WriteString(w, s)
+	location := r.FormValue("location")
+	fmt.Println("SEARCH ALL ABOUT ", location)
+
+	io.WriteString(w, location)
 }
 
 func main() {
-	http.HandleFunc("/", GetHello)
-	err := http.ListenAndServe(":3031", nil)
+	http.Handle("/", http.FileServer(http.Dir("./welcome")))
+	http.HandleFunc("/find-all-about", FindAllAbout)
 
-	if err != nil {
-		fmt.Println("Error starting server:", err)
+	if err := http.ListenAndServe(":3031", nil); err != nil {
+		log.Fatalf("Error starting server: %v", err)
 		os.Exit(1)
 	}
 }
