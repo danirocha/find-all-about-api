@@ -1,6 +1,6 @@
-# POI API
+# FIND ALL ABOUT
 
-Find info about a geo point of interest with this REST API built in Go
+Find all about a geo point with this REST API built in Go
 
 ## Getting Started
 
