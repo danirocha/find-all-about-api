@@ -39,6 +39,14 @@ type IntroData struct {
 	Pages []Page
 }
 
+type Img struct {
+	Url string
+}
+
+type ImgData struct {
+	Photos []Img
+}
+
 type Forecast struct {
 	Date           string
 	MinTemperature float64
@@ -50,6 +58,7 @@ type Location struct {
 	Name     string
 	Intro    string
 	Forecast []Forecast
+	Img      string
 }
 
 var Coord Coordinates
@@ -59,17 +68,18 @@ func getForecast(lat, lon float64) []Forecast {
 
 	resp, err := http.Get(url)
 	if err != nil {
-		log.Fatal(err)
+		log.Fatalf("Error getForecast -> http.Get: %v", err)
 	}
 	defer resp.Body.Close()
 
 	data, err := io.ReadAll(resp.Body)
 	if err != nil {
-		log.Fatal(err)
+		log.Fatalf("Error getForecast -> io.ReadAll: %v", err)
 	}
+
 	var d ForecastData
 	if err := json.Unmarshal(data, &d); err != nil {
-		log.Fatal(err)
+		log.Fatalf("Error getForecast -> json.Unmarshal: %v", err)
 	}
 
 	return []Forecast{
@@ -80,6 +90,31 @@ func getForecast(lat, lon float64) []Forecast {
 			d.ScaleUnit.Unit,
 		},
 	}
+
+}
+
+const SERVICE_PEXELS_API_KEY = ""
+
+func getImg(location string) string {
+	url := fmt.Sprintf("https://api.pexels.com/v1/search?query=%v&per_page=1", location)
+
+	resp, err := http.Get(url)
+	if err != nil {
+		log.Fatalf("Error getImg -> http.Get: %v", err)
+	}
+	defer resp.Body.Close()
+
+	data, err := io.ReadAll(resp.Body)
+	if err != nil {
+		log.Fatalf("Error getImg -> io.ReadAll: %v", err)
+	}
+
+	var d ImgData
+	if err := json.Unmarshal(data, &d); err != nil {
+		log.Fatalf("Error getImg -> json.Unmarshal: %v", err)
+	}
+
+	return d.Photos[0].Url
 }
 
 func getIntro(location string) string {
@@ -89,27 +124,31 @@ func getIntro(location string) string {
 
 	resp, err := http.Get(url)
 	if err != nil {
-		log.Fatal(err)
+		log.Fatalf("Error getIntro -> http.Get: %v", err)
 	}
 	defer resp.Body.Close()
 
 	data, err := io.ReadAll(resp.Body)
 	if err != nil {
-		log.Fatal(err)
+		log.Fatalf("Error getIntro -> io.ReadAll: %v", err)
 	}
-	var d IntroData
-	if err := json.Unmarshal(data, &d); err != nil {
-		log.Fatal(err)
+	if string(data) != "" {
+		var d IntroData
+		if err := json.Unmarshal(data, &d); err != nil {
+			log.Fatalf("Error getIntro -> json.Unmarshal: %v", err)
+		}
+
+		Coord = d.Pages[0].Coordinates
+
+		return string(d.Pages[0].Extract)
+	} else {
+		return ""
 	}
-
-	Coord = d.Pages[0].Coordinates
-
-	return string(d.Pages[0].Extract)
 }
 
 func FindAllAbout(w http.ResponseWriter, r *http.Request) {
 	if err := r.ParseForm(); err != nil {
-		log.Fatal(err)
+		log.Fatalf("Error r.ParseForm: %v", err)
 		return
 	}
 
@@ -117,11 +156,12 @@ func FindAllAbout(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("SEARCH ALL ABOUT ", location)
 	intro := getIntro(location)
 	forecast := getForecast(Coord.Lat, Coord.Lon)
+	img := getImg(location)
 
-	s, err := json.Marshal(Location{location, intro, forecast})
+	s, err := json.Marshal(Location{location, intro, forecast, img})
 
 	if err != nil {
-		log.Fatal(err)
+		log.Fatalf("Error json.Marshal: %v", err)
 	}
 
 	io.WriteString(w, string(s))
