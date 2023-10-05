@@ -1,0 +1,54 @@
+{
+    "pages": [
+        {
+            "pageid": 14072,
+            "ns": 0,
+            "index": 1,
+            "type": "standard",
+            "title": "History_of_Wikipedia",
+            "displaytitle": "<span class=\"mw-page-title-main\">History of Wikipedia</span>",
+            "namespace": {
+                "id": 0,
+                "text": ""
+            },
+            "wikibase_item": "Q6731",
+            "titles": {
+                "canonical": "History_of_Wikipedia",
+                "normalized": "History of Wikipedia",
+                "display": "<span class=\"mw-page-title-main\">History of Wikipedia</span>"
+            },
+            "thumbnail": {
+                "source": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/20/First_preserved_Main_Page_of_Wikipedia.jpeg/320px-First_preserved_Main_Page_of_Wikipedia.jpeg",
+                "width": 320,
+                "height": 391
+            },
+            "originalimage": {
+                "source": "https://upload.wikimedia.org/wikipedia/commons/2/20/First_preserved_Main_Page_of_Wikipedia.jpeg",
+                "width": 1280,
+                "height": 1562
+            },
+            "lang": "en",
+            "dir": "ltr",
+            "revision": "1177457115",
+            "tid": "0d2c05a0-5d5b-11ee-813c-4f1c66d7022d",
+            "timestamp": "2023-09-27T17:26:44Z",
+            "content_urls": {
+                "desktop": {
+                    "page": "https://en.wikipedia.org/wiki/History_of_Wikipedia",
+                    "revisions": "https://en.wikipedia.org/wiki/History_of_Wikipedia?action=history",
+                    "edit": "https://en.wikipedia.org/wiki/History_of_Wikipedia?action=edit",
+                    "talk": "https://en.wikipedia.org/wiki/Talk:History_of_Wikipedia"
+                },
+                "mobile": {
+                    "page": "https://en.m.wikipedia.org/wiki/History_of_Wikipedia",
+                    "revisions": "https://en.m.wikipedia.org/wiki/Special:History/History_of_Wikipedia",
+                    "edit": "https://en.m.wikipedia.org/wiki/History_of_Wikipedia?action=edit",
+                    "talk": "https://en.m.wikipedia.org/wiki/Talk:History_of_Wikipedia"
+                }
+            },
+            "extract": "Wikipedia, a free-content online encyclopedia written and maintained by a community of volunteers, began with its first edit on 15 January 2001, two days after the domain was registered. It grew out of Nupedia, a more structured free encyclopedia, as a way to allow easier and faster drafting of articles and translations.",
+            "extract_html": "<p>Wikipedia, a free-content online encyclopedia written and maintained by a community of volunteers, began with its first edit on 15 January 2001, two days after the domain was registered. It grew out of Nupedia, a more structured free encyclopedia, as a way to allow easier and faster drafting of articles and translations.</p>",
+            "normalizedtitle": "History of Wikipedia"
+        }
+    ]
+}
