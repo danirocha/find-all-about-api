@@ -1,0 +1,61 @@
+{
+    "summary": {
+        "query": "null island",
+        "queryType": "NON_NEAR",
+        "queryTime": 188,
+        "numResults": 1,
+        "offset": 0,
+        "totalResults": 1,
+        "fuzzyLevel": 1
+    },
+    "results": [
+        {
+            "type": "Geography",
+            "id": "Jbadi7asjn28aanq29ndfa",
+            "score": 2.7849089184,
+            "entityType": "MunicipalitySubdivision",
+            "matchConfidence": {
+                "score": 1
+            },
+            "address": {
+                "municipality": "Null Island",
+                "countrySubdivision": "Gulf",
+                "countrySubdivisionName": "Gulf",
+                "countrySubdivisionCode": "NI",
+                "countryCode": "PG",
+                "country": "Papua New Guinea",
+                "countryCodeISO3": "PNG",
+                "freeformAddress": "Gulf"
+            },
+            "position": {
+                "lat": 0,
+                "lon": 0
+            },
+            "viewport": {
+                "topLeftPoint": {
+                    "lat": 0,
+                    "lon": 0
+                },
+                "btmRightPoint": {
+                    "lat": 0,
+                    "lon": 0
+                }
+            },
+            "boundingBox": {
+                "topLeftPoint": {
+                    "lat": 0,
+                    "lon": 0
+                },
+                "btmRightPoint": {
+                    "lat": 0,
+                    "lon": 0
+                }
+            },
+            "dataSources": {
+                "geometry": {
+                    "id": "00005858-5800-1200-0000-00007737376f"
+                }
+            }
+        }
+    ]
+}

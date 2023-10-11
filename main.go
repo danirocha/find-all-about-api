@@ -31,9 +31,16 @@ type Coordinates struct {
 	Lon float64
 }
 
+type Geocode struct {
+	Coordinates Coordinates `json:"position"`
+}
+
+type GeocodeData struct {
+	Geocode []Geocode `json:"results"`
+}
+
 type Page struct {
-	Extract     string
-	Coordinates Coordinates
+	Extract string
 }
 
 type IntroData struct {
@@ -62,8 +69,6 @@ type Location struct {
 	Img      string
 }
 
-var Coord Coordinates
-
 func getDefaultResponse(filename string) *http.Response {
 	jsonFile, err := os.Open(filename)
 	if err != nil {
@@ -91,7 +96,7 @@ func getForecast(lat, lon float64) []Forecast {
 
 	resp, err := http.Get(url)
 	if err != nil || resp.StatusCode != 200 {
-		fmt.Println("Error getForecast -> http.Get. Using default value instead")
+		fmt.Printf("\nError getForecast -> http.Get: %v - %v", resp.StatusCode, err)
 		resp = getDefaultResponse("./assets/forecast.json")
 	}
 	defer resp.Body.Close()
@@ -123,7 +128,7 @@ func getImg(location string) string {
 
 	resp, err := http.Get(url)
 	if err != nil || resp.StatusCode != 200 {
-		fmt.Println("Error getImg -> http.Get. Using default value instead")
+		fmt.Printf("\nError getImg -> http.Get: %v - %v", resp.StatusCode, err)
 		resp = getDefaultResponse("./assets/image.json")
 	}
 	defer resp.Body.Close()
@@ -148,7 +153,7 @@ func getIntro(location string) string {
 
 	resp, err := http.Get(url)
 	if err != nil || resp.StatusCode != 200 {
-		fmt.Println("Error getIntro -> http.Get. Using default value instead")
+		fmt.Printf("\nError getIntro -> http.Get: %v - %v", resp.StatusCode, err)
 		resp = getDefaultResponse("./assets/intro.json")
 	}
 	defer resp.Body.Close()
@@ -162,9 +167,31 @@ func getIntro(location string) string {
 		log.Fatalf("Error getIntro -> json.Unmarshal: %v", err)
 	}
 
-	Coord = d.Pages[0].Coordinates
-
 	return string(d.Pages[0].Extract)
+}
+
+const SERVICE_TT_GEOCODE_API_KEY = "iAqjGRPWMY3VAcQFkwuFqbyEsh9hcPS4"
+
+func getCoords(location string) (float64, float64) {
+	url := fmt.Sprintf("https://api.tomtom.com/search/2/geocode/%v.json?limit=1&key=%v", location, SERVICE_TT_GEOCODE_API_KEY)
+
+	resp, err := http.Get(url)
+	if err != nil || resp.StatusCode != 200 {
+		fmt.Printf("\nError getCoords -> http.Get: %v - %v", resp.StatusCode, err)
+		resp = getDefaultResponse("./assets/coordinates.json")
+	}
+	defer resp.Body.Close()
+
+	data, err := io.ReadAll(resp.Body)
+	if err != nil {
+		log.Fatalf("Error getCoords -> io.ReadAll: %v", err)
+	}
+	var d GeocodeData
+	if err := json.Unmarshal(data, &d); err != nil {
+		log.Fatalf("Error getCoords -> json.Unmarshal: %v", err)
+	}
+
+	return d.Geocode[0].Coordinates.Lat, d.Geocode[0].Coordinates.Lon
 }
 
 func FindAllAbout(w http.ResponseWriter, r *http.Request) {
@@ -175,8 +202,10 @@ func FindAllAbout(w http.ResponseWriter, r *http.Request) {
 
 	location := r.FormValue("location")
 	fmt.Println("SEARCH ALL ABOUT ", location)
+
 	intro := getIntro(location)
-	forecast := getForecast(Coord.Lat, Coord.Lon)
+	lat, lon := getCoords(location)
+	forecast := getForecast(lat, lon)
 	img := getImg(location)
 	s, err := json.Marshal(Location{location, intro, forecast, img})
 
