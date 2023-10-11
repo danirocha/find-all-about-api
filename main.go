@@ -121,16 +121,21 @@ func getForecast(lat, lon float64) []Forecast {
 	}
 }
 
-const SERVICE_PEXELS_API_KEY = ""
+const SERVICE_PEXELS_API_KEY = "6vsafHzAxLQpLltEPWGXTrpvphFxZo4mUBJwq8iJXshnpTIZsypYecX6"
 
 func getImg(location string) string {
 	url := fmt.Sprintf("https://api.pexels.com/v1/search?query=%v&per_page=1", location)
 
-	resp, err := http.Get(url)
+	req, err := http.NewRequest("GET", url, nil)
+	req.Header.Add("Authorization", SERVICE_PEXELS_API_KEY)
+	client := &http.Client{}
+
+	resp, err := client.Do(req)
 	if err != nil || resp.StatusCode != 200 {
 		fmt.Printf("\nError getImg -> http.Get: %v - %v", resp.StatusCode, err)
 		resp = getDefaultResponse("./assets/image.json")
 	}
+
 	defer resp.Body.Close()
 
 	data, err := io.ReadAll(resp.Body)
